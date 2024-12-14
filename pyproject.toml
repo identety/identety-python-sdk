@@ -5,7 +5,7 @@ description = "The official Python library for the identety API"
 dynamic = ["readme"]
 license = "Apache-2.0"
 authors = [
-{ name = "Identety", email = "dev-feedback@identety.com" },
+{ name = "Identety", email = "identety.dev@gmail.com" },
 ]
 dependencies = [
     "httpx>=0.23.0, <1",

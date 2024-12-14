@@ -1,13 +1,5 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from .app import (
-    AppResource,
-    AsyncAppResource,
-    AppResourceWithRawResponse,
-    AsyncAppResourceWithRawResponse,
-    AppResourceWithStreamingResponse,
-    AsyncAppResourceWithStreamingResponse,
-)
 from .orgs import (
     OrgsResource,
     AsyncOrgsResource,
@@ -42,12 +34,6 @@ from .clients import (
 )
 
 __all__ = [
-    "AppResource",
-    "AsyncAppResource",
-    "AppResourceWithRawResponse",
-    "AsyncAppResourceWithRawResponse",
-    "AppResourceWithStreamingResponse",
-    "AsyncAppResourceWithStreamingResponse",
     "ClientsResource",
     "AsyncClientsResource",
     "ClientsResourceWithRawResponse",

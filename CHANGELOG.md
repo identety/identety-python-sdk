@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.1 (2024-12-14)
+
+Full Changelog: [v0.0.1-alpha.1...v0.1.0-alpha.1](https://github.com/identety/identety-python-sdk/compare/v0.0.1-alpha.1...v0.1.0-alpha.1)
+
+### Features
+
+* **api:** manual updates ([#5](https://github.com/identety/identety-python-sdk/issues/5)) ([27c8e66](https://github.com/identety/identety-python-sdk/commit/27c8e66ad55e6fc1103a73a0aad0bcccc83ccd86))
+
 ## 0.0.1-alpha.1 (2024-12-14)
 
 Full Changelog: [v0.0.1-alpha.0...v0.0.1-alpha.1](https://github.com/identety/identety-python-sdk/compare/v0.0.1-alpha.0...v0.0.1-alpha.1)

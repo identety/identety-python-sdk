@@ -20,7 +20,7 @@ or products provided by Identety please follow the respective company's security
 
 ### Identety Terms and Policies
 
-Please contact dev-feedback@identety.com for any questions or concerns regarding security of our services.
+Please contact identety.dev@gmail.com for any questions or concerns regarding security of our services.
 
 ---
 

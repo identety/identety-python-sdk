@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.0 (2024-12-14)
+
+Full Changelog: [v1.0.0...v1.1.0](https://github.com/identety/identety-python-sdk/compare/v1.0.0...v1.1.0)
+
+### Features
+
+* **api:** manual updates ([#14](https://github.com/identety/identety-python-sdk/issues/14)) ([4e7df66](https://github.com/identety/identety-python-sdk/commit/4e7df664b650243b611da8e9c3e5bb820d06053e))
+* **api:** manual updates ([#16](https://github.com/identety/identety-python-sdk/issues/16)) ([d20b3f4](https://github.com/identety/identety-python-sdk/commit/d20b3f4111a94674d169eca1b38da7807cd42da3))
+
 ## 1.0.0 (2024-12-14)
 
 Full Changelog: [v0.1.0-alpha.1...v1.0.0](https://github.com/identety/identety-python-sdk/compare/v0.1.0-alpha.1...v1.0.0)

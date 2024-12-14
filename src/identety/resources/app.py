@@ -15,28 +15,28 @@ from .._response import (
 )
 from .._base_client import make_request_options
 
-__all__ = ["AppsResource", "AsyncAppsResource"]
+__all__ = ["AppResource", "AsyncAppResource"]
 
 
-class AppsResource(SyncAPIResource):
+class AppResource(SyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> AppsResourceWithRawResponse:
+    def with_raw_response(self) -> AppResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/identety/identety-python-sdk#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/identety-python#accessing-raw-response-data-eg-headers
         """
-        return AppsResourceWithRawResponse(self)
+        return AppResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AppsResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AppResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/identety/identety-python-sdk#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/identety-python#with_streaming_response
         """
-        return AppsResourceWithStreamingResponse(self)
+        return AppResourceWithStreamingResponse(self)
 
     def retrieve(
         self,
@@ -58,25 +58,25 @@ class AppsResource(SyncAPIResource):
         )
 
 
-class AsyncAppsResource(AsyncAPIResource):
+class AsyncAppResource(AsyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> AsyncAppsResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncAppResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/identety/identety-python-sdk#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/stainless-sdks/identety-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncAppsResourceWithRawResponse(self)
+        return AsyncAppResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncAppsResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncAppResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/identety/identety-python-sdk#with_streaming_response
+        For more information, see https://www.github.com/stainless-sdks/identety-python#with_streaming_response
         """
-        return AsyncAppsResourceWithStreamingResponse(self)
+        return AsyncAppResourceWithStreamingResponse(self)
 
     async def retrieve(
         self,
@@ -98,37 +98,37 @@ class AsyncAppsResource(AsyncAPIResource):
         )
 
 
-class AppsResourceWithRawResponse:
-    def __init__(self, apps: AppsResource) -> None:
-        self._apps = apps
+class AppResourceWithRawResponse:
+    def __init__(self, app: AppResource) -> None:
+        self._app = app
 
         self.retrieve = to_raw_response_wrapper(
-            apps.retrieve,
+            app.retrieve,
         )
 
 
-class AsyncAppsResourceWithRawResponse:
-    def __init__(self, apps: AsyncAppsResource) -> None:
-        self._apps = apps
+class AsyncAppResourceWithRawResponse:
+    def __init__(self, app: AsyncAppResource) -> None:
+        self._app = app
 
         self.retrieve = async_to_raw_response_wrapper(
-            apps.retrieve,
+            app.retrieve,
         )
 
 
-class AppsResourceWithStreamingResponse:
-    def __init__(self, apps: AppsResource) -> None:
-        self._apps = apps
+class AppResourceWithStreamingResponse:
+    def __init__(self, app: AppResource) -> None:
+        self._app = app
 
         self.retrieve = to_streamed_response_wrapper(
-            apps.retrieve,
+            app.retrieve,
         )
 
 
-class AsyncAppsResourceWithStreamingResponse:
-    def __init__(self, apps: AsyncAppsResource) -> None:
-        self._apps = apps
+class AsyncAppResourceWithStreamingResponse:
+    def __init__(self, app: AsyncAppResource) -> None:
+        self._app = app
 
         self.retrieve = async_to_streamed_response_wrapper(
-            apps.retrieve,
+            app.retrieve,
         )

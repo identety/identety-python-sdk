@@ -35,7 +35,7 @@ class ClientsResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/identety-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/identety/identety-python-sdk#accessing-raw-response-data-eg-headers
         """
         return ClientsResourceWithRawResponse(self)
 
@@ -44,7 +44,7 @@ class ClientsResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/identety-python#with_streaming_response
+        For more information, see https://www.github.com/identety/identety-python-sdk#with_streaming_response
         """
         return ClientsResourceWithStreamingResponse(self)
 
@@ -306,7 +306,7 @@ class AsyncClientsResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/identety-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/identety/identety-python-sdk#accessing-raw-response-data-eg-headers
         """
         return AsyncClientsResourceWithRawResponse(self)
 
@@ -315,7 +315,7 @@ class AsyncClientsResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/identety-python#with_streaming_response
+        For more information, see https://www.github.com/identety/identety-python-sdk#with_streaming_response
         """
         return AsyncClientsResourceWithStreamingResponse(self)
 

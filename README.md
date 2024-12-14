@@ -16,7 +16,7 @@ The REST API documentation can be found on [docs.identety.dev](https://docs.iden
 
 ```sh
 # install from PyPI
-pip install --pre identety
+pip install identety
 ```
 
 ## Usage

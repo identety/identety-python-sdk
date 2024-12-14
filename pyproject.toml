@@ -1,6 +1,6 @@
 [project]
 name = "identety"
-version = "0.1.0-alpha.1"
+version = "1.0.0"
 description = "The official Python library for the identety API"
 dynamic = ["readme"]
 license = "Apache-2.0"
@@ -34,8 +34,8 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/stainless-sdks/identety-python"
-Repository = "https://github.com/stainless-sdks/identety-python"
+Homepage = "https://github.com/identety/identety-python-sdk"
+Repository = "https://github.com/identety/identety-python-sdk"
 
 
 
@@ -122,7 +122,7 @@ path = "README.md"
 [[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
 # replace relative links with absolute links
 pattern = '\[(.+?)\]\(((?!https?://)\S+?)\)'
-replacement = '[\1](https://github.com/stainless-sdks/identety-python/tree/main/\g<2>)'
+replacement = '[\1](https://github.com/identety/identety-python-sdk/tree/main/\g<2>)'
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

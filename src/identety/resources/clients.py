@@ -66,7 +66,7 @@ class ClientsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Client:
         """
-        Create client
+        Create new client
 
         Args:
           name: Client Name
@@ -337,7 +337,7 @@ class AsyncClientsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Client:
         """
-        Create client
+        Create new client
 
         Args:
           name: Client Name

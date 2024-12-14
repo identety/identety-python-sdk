@@ -22,19 +22,9 @@ Methods:
 
 # Users
 
-Types:
-
-```python
-from identety.types import User, UserListResponse
-```
-
 Methods:
 
-- <code title="post /users">client.users.<a href="./src/identety/resources/users.py">create</a>(\*\*<a href="src/identety/types/user_create_params.py">params</a>) -> <a href="./src/identety/types/user.py">User</a></code>
-- <code title="get /users/{id}">client.users.<a href="./src/identety/resources/users.py">retrieve</a>(id) -> <a href="./src/identety/types/user.py">User</a></code>
-- <code title="put /users/{id}">client.users.<a href="./src/identety/resources/users.py">update</a>(id, \*\*<a href="src/identety/types/user_update_params.py">params</a>) -> <a href="./src/identety/types/user.py">User</a></code>
-- <code title="get /users">client.users.<a href="./src/identety/resources/users.py">list</a>(\*\*<a href="src/identety/types/user_list_params.py">params</a>) -> <a href="./src/identety/types/user_list_response.py">UserListResponse</a></code>
-- <code title="delete /users/{id}">client.users.<a href="./src/identety/resources/users.py">delete</a>(id) -> <a href="./src/identety/types/user.py">User</a></code>
+- <code title="post /users">client.users.<a href="./src/identety/resources/users.py">create</a>(\*\*<a href="src/identety/types/user_create_params.py">params</a>) -> None</code>
 
 # Orgs
 

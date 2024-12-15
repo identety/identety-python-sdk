@@ -1,3 +1,9 @@
+# App
+
+Methods:
+
+- <code title="get /">client.app.<a href="./src/identety/resources/app.py">retrieve</a>() -> None</code>
+
 # Clients
 
 Types:

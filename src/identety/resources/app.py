@@ -15,32 +15,31 @@ from .._response import (
 )
 from .._base_client import make_request_options
 
-__all__ = ["OrgsResource", "AsyncOrgsResource"]
+__all__ = ["AppResource", "AsyncAppResource"]
 
 
-class OrgsResource(SyncAPIResource):
+class AppResource(SyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> OrgsResourceWithRawResponse:
+    def with_raw_response(self) -> AppResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/identety-python#accessing-raw-response-data-eg-headers
         """
-        return OrgsResourceWithRawResponse(self)
+        return AppResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> OrgsResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AppResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/identety-python#with_streaming_response
         """
-        return OrgsResourceWithStreamingResponse(self)
+        return AppResourceWithStreamingResponse(self)
 
     def retrieve(
         self,
-        id: str,
         *,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -49,21 +48,9 @@ class OrgsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> None:
-        """
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not id:
-            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._get(
-            f"/org/{id}",
+            "/",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -71,29 +58,28 @@ class OrgsResource(SyncAPIResource):
         )
 
 
-class AsyncOrgsResource(AsyncAPIResource):
+class AsyncAppResource(AsyncAPIResource):
     @cached_property
-    def with_raw_response(self) -> AsyncOrgsResourceWithRawResponse:
+    def with_raw_response(self) -> AsyncAppResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return the
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/stainless-sdks/identety-python#accessing-raw-response-data-eg-headers
         """
-        return AsyncOrgsResourceWithRawResponse(self)
+        return AsyncAppResourceWithRawResponse(self)
 
     @cached_property
-    def with_streaming_response(self) -> AsyncOrgsResourceWithStreamingResponse:
+    def with_streaming_response(self) -> AsyncAppResourceWithStreamingResponse:
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
         For more information, see https://www.github.com/stainless-sdks/identety-python#with_streaming_response
         """
-        return AsyncOrgsResourceWithStreamingResponse(self)
+        return AsyncAppResourceWithStreamingResponse(self)
 
     async def retrieve(
         self,
-        id: str,
         *,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -102,21 +88,9 @@ class AsyncOrgsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> None:
-        """
-        Args:
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not id:
-            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
         extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._get(
-            f"/org/{id}",
+            "/",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
@@ -124,37 +98,37 @@ class AsyncOrgsResource(AsyncAPIResource):
         )
 
 
-class OrgsResourceWithRawResponse:
-    def __init__(self, orgs: OrgsResource) -> None:
-        self._orgs = orgs
+class AppResourceWithRawResponse:
+    def __init__(self, app: AppResource) -> None:
+        self._app = app
 
         self.retrieve = to_raw_response_wrapper(
-            orgs.retrieve,
+            app.retrieve,
         )
 
 
-class AsyncOrgsResourceWithRawResponse:
-    def __init__(self, orgs: AsyncOrgsResource) -> None:
-        self._orgs = orgs
+class AsyncAppResourceWithRawResponse:
+    def __init__(self, app: AsyncAppResource) -> None:
+        self._app = app
 
         self.retrieve = async_to_raw_response_wrapper(
-            orgs.retrieve,
+            app.retrieve,
         )
 
 
-class OrgsResourceWithStreamingResponse:
-    def __init__(self, orgs: OrgsResource) -> None:
-        self._orgs = orgs
+class AppResourceWithStreamingResponse:
+    def __init__(self, app: AppResource) -> None:
+        self._app = app
 
         self.retrieve = to_streamed_response_wrapper(
-            orgs.retrieve,
+            app.retrieve,
         )
 
 
-class AsyncOrgsResourceWithStreamingResponse:
-    def __init__(self, orgs: AsyncOrgsResource) -> None:
-        self._orgs = orgs
+class AsyncAppResourceWithStreamingResponse:
+    def __init__(self, app: AsyncAppResource) -> None:
+        self._app = app
 
         self.retrieve = async_to_streamed_response_wrapper(
-            orgs.retrieve,
+            app.retrieve,
         )

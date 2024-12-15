@@ -701,31 +701,12 @@ class TestIdentety:
     @mock.patch("identety._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/users").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.post("/clients").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
             self.client.post(
-                "/users",
-                body=cast(
-                    object,
-                    dict(
-                        address={
-                            "country": "USA",
-                            "locality": "New York",
-                            "postal_code": "10001",
-                            "region": "NY",
-                            "street_address": "123 Main St",
-                        },
-                        email="john@example.com",
-                        family_name="Doe",
-                        given_name="John",
-                        locale="en-US",
-                        metadata={"customField": "value"},
-                        name="John Doe",
-                        password="password123",
-                        picture="https://example.com/photo.jpg",
-                    ),
-                ),
+                "/clients",
+                body=cast(object, dict(name="name", type="public")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -735,31 +716,12 @@ class TestIdentety:
     @mock.patch("identety._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/users").mock(return_value=httpx.Response(500))
+        respx_mock.post("/clients").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
             self.client.post(
-                "/users",
-                body=cast(
-                    object,
-                    dict(
-                        address={
-                            "country": "USA",
-                            "locality": "New York",
-                            "postal_code": "10001",
-                            "region": "NY",
-                            "street_address": "123 Main St",
-                        },
-                        email="john@example.com",
-                        family_name="Doe",
-                        given_name="John",
-                        locale="en-US",
-                        metadata={"customField": "value"},
-                        name="John Doe",
-                        password="password123",
-                        picture="https://example.com/photo.jpg",
-                    ),
-                ),
+                "/clients",
+                body=cast(object, dict(name="name", type="public")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -790,25 +752,9 @@ class TestIdentety:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/users").mock(side_effect=retry_handler)
+        respx_mock.post("/clients").mock(side_effect=retry_handler)
 
-        response = client.users.with_raw_response.create(
-            address={
-                "country": "USA",
-                "locality": "New York",
-                "postal_code": "10001",
-                "region": "NY",
-                "street_address": "123 Main St",
-            },
-            email="john@example.com",
-            family_name="Doe",
-            given_name="John",
-            locale="en-US",
-            metadata={"customField": "value"},
-            name="John Doe",
-            password="password123",
-            picture="https://example.com/photo.jpg",
-        )
+        response = client.clients.with_raw_response.create(name="name", type="public")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -830,25 +776,10 @@ class TestIdentety:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/users").mock(side_effect=retry_handler)
+        respx_mock.post("/clients").mock(side_effect=retry_handler)
 
-        response = client.users.with_raw_response.create(
-            address={
-                "country": "USA",
-                "locality": "New York",
-                "postal_code": "10001",
-                "region": "NY",
-                "street_address": "123 Main St",
-            },
-            email="john@example.com",
-            family_name="Doe",
-            given_name="John",
-            locale="en-US",
-            metadata={"customField": "value"},
-            name="John Doe",
-            password="password123",
-            picture="https://example.com/photo.jpg",
-            extra_headers={"x-stainless-retry-count": Omit()},
+        response = client.clients.with_raw_response.create(
+            name="name", type="public", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -870,25 +801,10 @@ class TestIdentety:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/users").mock(side_effect=retry_handler)
+        respx_mock.post("/clients").mock(side_effect=retry_handler)
 
-        response = client.users.with_raw_response.create(
-            address={
-                "country": "USA",
-                "locality": "New York",
-                "postal_code": "10001",
-                "region": "NY",
-                "street_address": "123 Main St",
-            },
-            email="john@example.com",
-            family_name="Doe",
-            given_name="John",
-            locale="en-US",
-            metadata={"customField": "value"},
-            name="John Doe",
-            password="password123",
-            picture="https://example.com/photo.jpg",
-            extra_headers={"x-stainless-retry-count": "42"},
+        response = client.clients.with_raw_response.create(
+            name="name", type="public", extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
@@ -1555,31 +1471,12 @@ class TestAsyncIdentety:
     @mock.patch("identety._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/users").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.post("/clients").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
             await self.client.post(
-                "/users",
-                body=cast(
-                    object,
-                    dict(
-                        address={
-                            "country": "USA",
-                            "locality": "New York",
-                            "postal_code": "10001",
-                            "region": "NY",
-                            "street_address": "123 Main St",
-                        },
-                        email="john@example.com",
-                        family_name="Doe",
-                        given_name="John",
-                        locale="en-US",
-                        metadata={"customField": "value"},
-                        name="John Doe",
-                        password="password123",
-                        picture="https://example.com/photo.jpg",
-                    ),
-                ),
+                "/clients",
+                body=cast(object, dict(name="name", type="public")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1589,31 +1486,12 @@ class TestAsyncIdentety:
     @mock.patch("identety._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter) -> None:
-        respx_mock.post("/users").mock(return_value=httpx.Response(500))
+        respx_mock.post("/clients").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
             await self.client.post(
-                "/users",
-                body=cast(
-                    object,
-                    dict(
-                        address={
-                            "country": "USA",
-                            "locality": "New York",
-                            "postal_code": "10001",
-                            "region": "NY",
-                            "street_address": "123 Main St",
-                        },
-                        email="john@example.com",
-                        family_name="Doe",
-                        given_name="John",
-                        locale="en-US",
-                        metadata={"customField": "value"},
-                        name="John Doe",
-                        password="password123",
-                        picture="https://example.com/photo.jpg",
-                    ),
-                ),
+                "/clients",
+                body=cast(object, dict(name="name", type="public")),
                 cast_to=httpx.Response,
                 options={"headers": {RAW_RESPONSE_HEADER: "stream"}},
             )
@@ -1645,25 +1523,9 @@ class TestAsyncIdentety:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/users").mock(side_effect=retry_handler)
+        respx_mock.post("/clients").mock(side_effect=retry_handler)
 
-        response = await client.users.with_raw_response.create(
-            address={
-                "country": "USA",
-                "locality": "New York",
-                "postal_code": "10001",
-                "region": "NY",
-                "street_address": "123 Main St",
-            },
-            email="john@example.com",
-            family_name="Doe",
-            given_name="John",
-            locale="en-US",
-            metadata={"customField": "value"},
-            name="John Doe",
-            password="password123",
-            picture="https://example.com/photo.jpg",
-        )
+        response = await client.clients.with_raw_response.create(name="name", type="public")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1686,25 +1548,10 @@ class TestAsyncIdentety:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/users").mock(side_effect=retry_handler)
+        respx_mock.post("/clients").mock(side_effect=retry_handler)
 
-        response = await client.users.with_raw_response.create(
-            address={
-                "country": "USA",
-                "locality": "New York",
-                "postal_code": "10001",
-                "region": "NY",
-                "street_address": "123 Main St",
-            },
-            email="john@example.com",
-            family_name="Doe",
-            given_name="John",
-            locale="en-US",
-            metadata={"customField": "value"},
-            name="John Doe",
-            password="password123",
-            picture="https://example.com/photo.jpg",
-            extra_headers={"x-stainless-retry-count": Omit()},
+        response = await client.clients.with_raw_response.create(
+            name="name", type="public", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -1727,25 +1574,10 @@ class TestAsyncIdentety:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.post("/users").mock(side_effect=retry_handler)
+        respx_mock.post("/clients").mock(side_effect=retry_handler)
 
-        response = await client.users.with_raw_response.create(
-            address={
-                "country": "USA",
-                "locality": "New York",
-                "postal_code": "10001",
-                "region": "NY",
-                "street_address": "123 Main St",
-            },
-            email="john@example.com",
-            family_name="Doe",
-            given_name="John",
-            locale="en-US",
-            metadata={"customField": "value"},
-            name="John Doe",
-            password="password123",
-            picture="https://example.com/photo.jpg",
-            extra_headers={"x-stainless-retry-count": "42"},
+        response = await client.clients.with_raw_response.create(
+            name="name", type="public", extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"

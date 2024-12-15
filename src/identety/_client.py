@@ -24,7 +24,7 @@ from ._utils import (
     get_async_library,
 )
 from ._version import __version__
-from .resources import orgs, roles, users, clients
+from .resources import app, orgs, roles, users, clients
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import IdentetyError, APIStatusError
 from ._base_client import (
@@ -46,6 +46,7 @@ __all__ = [
 
 
 class Identety(SyncAPIClient):
+    app: app.AppResource
     clients: clients.ClientsResource
     users: users.UsersResource
     orgs: orgs.OrgsResource
@@ -102,6 +103,7 @@ class Identety(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
+        self.app = app.AppResource(self)
         self.clients = clients.ClientsResource(self)
         self.users = users.UsersResource(self)
         self.orgs = orgs.OrgsResource(self)
@@ -215,6 +217,7 @@ class Identety(SyncAPIClient):
 
 
 class AsyncIdentety(AsyncAPIClient):
+    app: app.AsyncAppResource
     clients: clients.AsyncClientsResource
     users: users.AsyncUsersResource
     orgs: orgs.AsyncOrgsResource
@@ -271,6 +274,7 @@ class AsyncIdentety(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
+        self.app = app.AsyncAppResource(self)
         self.clients = clients.AsyncClientsResource(self)
         self.users = users.AsyncUsersResource(self)
         self.orgs = orgs.AsyncOrgsResource(self)
@@ -385,6 +389,7 @@ class AsyncIdentety(AsyncAPIClient):
 
 class IdentetyWithRawResponse:
     def __init__(self, client: Identety) -> None:
+        self.app = app.AppResourceWithRawResponse(client.app)
         self.clients = clients.ClientsResourceWithRawResponse(client.clients)
         self.users = users.UsersResourceWithRawResponse(client.users)
         self.orgs = orgs.OrgsResourceWithRawResponse(client.orgs)
@@ -393,6 +398,7 @@ class IdentetyWithRawResponse:
 
 class AsyncIdentetyWithRawResponse:
     def __init__(self, client: AsyncIdentety) -> None:
+        self.app = app.AsyncAppResourceWithRawResponse(client.app)
         self.clients = clients.AsyncClientsResourceWithRawResponse(client.clients)
         self.users = users.AsyncUsersResourceWithRawResponse(client.users)
         self.orgs = orgs.AsyncOrgsResourceWithRawResponse(client.orgs)
@@ -401,6 +407,7 @@ class AsyncIdentetyWithRawResponse:
 
 class IdentetyWithStreamedResponse:
     def __init__(self, client: Identety) -> None:
+        self.app = app.AppResourceWithStreamingResponse(client.app)
         self.clients = clients.ClientsResourceWithStreamingResponse(client.clients)
         self.users = users.UsersResourceWithStreamingResponse(client.users)
         self.orgs = orgs.OrgsResourceWithStreamingResponse(client.orgs)
@@ -409,6 +416,7 @@ class IdentetyWithStreamedResponse:
 
 class AsyncIdentetyWithStreamedResponse:
     def __init__(self, client: AsyncIdentety) -> None:
+        self.app = app.AsyncAppResourceWithStreamingResponse(client.app)
         self.clients = clients.AsyncClientsResourceWithStreamingResponse(client.clients)
         self.users = users.AsyncUsersResourceWithStreamingResponse(client.users)
         self.orgs = orgs.AsyncOrgsResourceWithStreamingResponse(client.orgs)

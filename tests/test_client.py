@@ -35,7 +35,6 @@ from identety._base_client import (
 from .utils import update_env
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
-api_key = "My API Key"
 
 
 def _get_params(client: BaseClient[Any, Any]) -> dict[str, str]:
@@ -57,7 +56,7 @@ def _get_open_connections(client: Identety | AsyncIdentety) -> int:
 
 
 class TestIdentety:
-    client = Identety(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+    client = Identety(base_url=base_url, _strict_response_validation=True)
 
     @pytest.mark.respx(base_url=base_url)
     def test_raw_response(self, respx_mock: MockRouter) -> None:
@@ -83,15 +82,11 @@ class TestIdentety:
         copied = self.client.copy()
         assert id(copied) != id(self.client)
 
-        copied = self.client.copy(api_key="another My API Key")
-        assert copied.api_key == "another My API Key"
-        assert self.client.api_key == "My API Key"
-
     def test_copy_default_options(self) -> None:
         # options that have a default are overridden correctly
         copied = self.client.copy(max_retries=7)
         assert copied.max_retries == 7
-        assert self.client.max_retries == 10
+        assert self.client.max_retries == 2
 
         copied2 = copied.copy(max_retries=6)
         assert copied2.max_retries == 6
@@ -104,9 +99,7 @@ class TestIdentety:
         assert isinstance(self.client.timeout, httpx.Timeout)
 
     def test_copy_default_headers(self) -> None:
-        client = Identety(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
-        )
+        client = Identety(base_url=base_url, _strict_response_validation=True, default_headers={"X-Foo": "bar"})
         assert client.default_headers["X-Foo"] == "bar"
 
         # does not override the already given value when not specified
@@ -138,9 +131,7 @@ class TestIdentety:
             client.copy(set_default_headers={}, default_headers={"X-Foo": "Bar"})
 
     def test_copy_default_query(self) -> None:
-        client = Identety(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
-        )
+        client = Identety(base_url=base_url, _strict_response_validation=True, default_query={"foo": "bar"})
         assert _get_params(client)["foo"] == "bar"
 
         # does not override the already given value when not specified
@@ -263,9 +254,7 @@ class TestIdentety:
         assert timeout == httpx.Timeout(100.0)
 
     def test_client_timeout_option(self) -> None:
-        client = Identety(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
-        )
+        client = Identety(base_url=base_url, _strict_response_validation=True, timeout=httpx.Timeout(0))
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -274,9 +263,7 @@ class TestIdentety:
     def test_http_client_timeout_option(self) -> None:
         # custom timeout given to the httpx client should be used
         with httpx.Client(timeout=None) as http_client:
-            client = Identety(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
-            )
+            client = Identety(base_url=base_url, _strict_response_validation=True, http_client=http_client)
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
             timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -284,9 +271,7 @@ class TestIdentety:
 
         # no timeout given to the httpx client should not use the httpx default
         with httpx.Client() as http_client:
-            client = Identety(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
-            )
+            client = Identety(base_url=base_url, _strict_response_validation=True, http_client=http_client)
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
             timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -294,9 +279,7 @@ class TestIdentety:
 
         # explicitly passing the default timeout currently results in it being ignored
         with httpx.Client(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
-            client = Identety(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
-            )
+            client = Identety(base_url=base_url, _strict_response_validation=True, http_client=http_client)
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
             timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -305,24 +288,16 @@ class TestIdentety:
     async def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
             async with httpx.AsyncClient() as http_client:
-                Identety(
-                    base_url=base_url,
-                    api_key=api_key,
-                    _strict_response_validation=True,
-                    http_client=cast(Any, http_client),
-                )
+                Identety(base_url=base_url, _strict_response_validation=True, http_client=cast(Any, http_client))
 
     def test_default_headers_option(self) -> None:
-        client = Identety(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
-        )
+        client = Identety(base_url=base_url, _strict_response_validation=True, default_headers={"X-Foo": "bar"})
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
         assert request.headers.get("x-stainless-lang") == "python"
 
         client2 = Identety(
             base_url=base_url,
-            api_key=api_key,
             _strict_response_validation=True,
             default_headers={
                 "X-Foo": "stainless",
@@ -334,9 +309,7 @@ class TestIdentety:
         assert request.headers.get("x-stainless-lang") == "my-overriding-header"
 
     def test_default_query_option(self) -> None:
-        client = Identety(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
-        )
+        client = Identety(base_url=base_url, _strict_response_validation=True, default_query={"query_param": "bar"})
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         url = httpx.URL(request.url)
         assert dict(url.params) == {"query_param": "bar"}
@@ -535,7 +508,7 @@ class TestIdentety:
         assert response.foo == 2
 
     def test_base_url_setter(self) -> None:
-        client = Identety(base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True)
+        client = Identety(base_url="https://example.com/from_init", _strict_response_validation=True)
         assert client.base_url == "https://example.com/from_init/"
 
         client.base_url = "https://example.com/from_setter"  # type: ignore[assignment]
@@ -544,16 +517,15 @@ class TestIdentety:
 
     def test_base_url_env(self) -> None:
         with update_env(IDENTETY_BASE_URL="http://localhost:5000/from/env"):
-            client = Identety(api_key=api_key, _strict_response_validation=True)
+            client = Identety(_strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
-            Identety(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
+            Identety(base_url="http://localhost:5000/custom/path/", _strict_response_validation=True),
             Identety(
                 base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
@@ -573,10 +545,9 @@ class TestIdentety:
     @pytest.mark.parametrize(
         "client",
         [
-            Identety(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
+            Identety(base_url="http://localhost:5000/custom/path/", _strict_response_validation=True),
             Identety(
                 base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
@@ -596,10 +567,9 @@ class TestIdentety:
     @pytest.mark.parametrize(
         "client",
         [
-            Identety(base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True),
+            Identety(base_url="http://localhost:5000/custom/path/", _strict_response_validation=True),
             Identety(
                 base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
                 _strict_response_validation=True,
                 http_client=httpx.Client(),
             ),
@@ -617,7 +587,7 @@ class TestIdentety:
         assert request.url == "https://myapi.com/foo"
 
     def test_copied_client_does_not_close_http(self) -> None:
-        client = Identety(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = Identety(base_url=base_url, _strict_response_validation=True)
         assert not client.is_closed()
 
         copied = client.copy()
@@ -628,7 +598,7 @@ class TestIdentety:
         assert not client.is_closed()
 
     def test_client_context_manager(self) -> None:
-        client = Identety(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = Identety(base_url=base_url, _strict_response_validation=True)
         with client as c2:
             assert c2 is client
             assert not c2.is_closed()
@@ -649,7 +619,7 @@ class TestIdentety:
 
     def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
-            Identety(base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None))
+            Identety(base_url=base_url, _strict_response_validation=True, max_retries=cast(Any, None))
 
     @pytest.mark.respx(base_url=base_url)
     def test_received_text_for_expected_json(self, respx_mock: MockRouter) -> None:
@@ -658,12 +628,12 @@ class TestIdentety:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = Identety(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        strict_client = Identety(base_url=base_url, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             strict_client.get("/foo", cast_to=Model)
 
-        client = Identety(base_url=base_url, api_key=api_key, _strict_response_validation=False)
+        client = Identety(base_url=base_url, _strict_response_validation=False)
 
         response = client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -672,31 +642,31 @@ class TestIdentety:
         "remaining_retries,retry_after,timeout",
         [
             [3, "20", 20],
-            [3, "0", 0],
-            [3, "-10", 0],
+            [3, "0", 0.5],
+            [3, "-10", 0.5],
             [3, "60", 60],
-            [3, "61", 0],
+            [3, "61", 0.5],
             [3, "Fri, 29 Sep 2023 16:26:57 GMT", 20],
-            [3, "Fri, 29 Sep 2023 16:26:37 GMT", 0],
-            [3, "Fri, 29 Sep 2023 16:26:27 GMT", 0],
+            [3, "Fri, 29 Sep 2023 16:26:37 GMT", 0.5],
+            [3, "Fri, 29 Sep 2023 16:26:27 GMT", 0.5],
             [3, "Fri, 29 Sep 2023 16:27:37 GMT", 60],
-            [3, "Fri, 29 Sep 2023 16:27:38 GMT", 0],
-            [3, "99999999999999999999999999999999999", 0],
-            [3, "Zun, 29 Sep 2023 16:26:27 GMT", 0],
-            [3, "", 0],
-            [2, "", 0 * 2.0],
-            [1, "", 0 * 4.0],
-            [-1100, "", 30],  # test large number potentially overflowing
+            [3, "Fri, 29 Sep 2023 16:27:38 GMT", 0.5],
+            [3, "99999999999999999999999999999999999", 0.5],
+            [3, "Zun, 29 Sep 2023 16:26:27 GMT", 0.5],
+            [3, "", 0.5],
+            [2, "", 0.5 * 2.0],
+            [1, "", 0.5 * 4.0],
+            [-1100, "", 8],  # test large number potentially overflowing
         ],
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
-        client = Identety(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = Identety(base_url=base_url, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
-        assert calculated == pytest.approx(timeout, 0 * 0.875)  # pyright: ignore[reportUnknownMemberType]
+        assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
 
     @mock.patch("identety._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
@@ -895,7 +865,7 @@ class TestIdentety:
 
 
 class TestAsyncIdentety:
-    client = AsyncIdentety(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+    client = AsyncIdentety(base_url=base_url, _strict_response_validation=True)
 
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
@@ -923,15 +893,11 @@ class TestAsyncIdentety:
         copied = self.client.copy()
         assert id(copied) != id(self.client)
 
-        copied = self.client.copy(api_key="another My API Key")
-        assert copied.api_key == "another My API Key"
-        assert self.client.api_key == "My API Key"
-
     def test_copy_default_options(self) -> None:
         # options that have a default are overridden correctly
         copied = self.client.copy(max_retries=7)
         assert copied.max_retries == 7
-        assert self.client.max_retries == 10
+        assert self.client.max_retries == 2
 
         copied2 = copied.copy(max_retries=6)
         assert copied2.max_retries == 6
@@ -944,9 +910,7 @@ class TestAsyncIdentety:
         assert isinstance(self.client.timeout, httpx.Timeout)
 
     def test_copy_default_headers(self) -> None:
-        client = AsyncIdentety(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
-        )
+        client = AsyncIdentety(base_url=base_url, _strict_response_validation=True, default_headers={"X-Foo": "bar"})
         assert client.default_headers["X-Foo"] == "bar"
 
         # does not override the already given value when not specified
@@ -978,9 +942,7 @@ class TestAsyncIdentety:
             client.copy(set_default_headers={}, default_headers={"X-Foo": "Bar"})
 
     def test_copy_default_query(self) -> None:
-        client = AsyncIdentety(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"foo": "bar"}
-        )
+        client = AsyncIdentety(base_url=base_url, _strict_response_validation=True, default_query={"foo": "bar"})
         assert _get_params(client)["foo"] == "bar"
 
         # does not override the already given value when not specified
@@ -1103,9 +1065,7 @@ class TestAsyncIdentety:
         assert timeout == httpx.Timeout(100.0)
 
     async def test_client_timeout_option(self) -> None:
-        client = AsyncIdentety(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, timeout=httpx.Timeout(0)
-        )
+        client = AsyncIdentety(base_url=base_url, _strict_response_validation=True, timeout=httpx.Timeout(0))
 
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -1114,9 +1074,7 @@ class TestAsyncIdentety:
     async def test_http_client_timeout_option(self) -> None:
         # custom timeout given to the httpx client should be used
         async with httpx.AsyncClient(timeout=None) as http_client:
-            client = AsyncIdentety(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
-            )
+            client = AsyncIdentety(base_url=base_url, _strict_response_validation=True, http_client=http_client)
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
             timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -1124,9 +1082,7 @@ class TestAsyncIdentety:
 
         # no timeout given to the httpx client should not use the httpx default
         async with httpx.AsyncClient() as http_client:
-            client = AsyncIdentety(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
-            )
+            client = AsyncIdentety(base_url=base_url, _strict_response_validation=True, http_client=http_client)
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
             timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -1134,9 +1090,7 @@ class TestAsyncIdentety:
 
         # explicitly passing the default timeout currently results in it being ignored
         async with httpx.AsyncClient(timeout=HTTPX_DEFAULT_TIMEOUT) as http_client:
-            client = AsyncIdentety(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, http_client=http_client
-            )
+            client = AsyncIdentety(base_url=base_url, _strict_response_validation=True, http_client=http_client)
 
             request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
             timeout = httpx.Timeout(**request.extensions["timeout"])  # type: ignore
@@ -1145,24 +1099,16 @@ class TestAsyncIdentety:
     def test_invalid_http_client(self) -> None:
         with pytest.raises(TypeError, match="Invalid `http_client` arg"):
             with httpx.Client() as http_client:
-                AsyncIdentety(
-                    base_url=base_url,
-                    api_key=api_key,
-                    _strict_response_validation=True,
-                    http_client=cast(Any, http_client),
-                )
+                AsyncIdentety(base_url=base_url, _strict_response_validation=True, http_client=cast(Any, http_client))
 
     def test_default_headers_option(self) -> None:
-        client = AsyncIdentety(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_headers={"X-Foo": "bar"}
-        )
+        client = AsyncIdentety(base_url=base_url, _strict_response_validation=True, default_headers={"X-Foo": "bar"})
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         assert request.headers.get("x-foo") == "bar"
         assert request.headers.get("x-stainless-lang") == "python"
 
         client2 = AsyncIdentety(
             base_url=base_url,
-            api_key=api_key,
             _strict_response_validation=True,
             default_headers={
                 "X-Foo": "stainless",
@@ -1175,7 +1121,7 @@ class TestAsyncIdentety:
 
     def test_default_query_option(self) -> None:
         client = AsyncIdentety(
-            base_url=base_url, api_key=api_key, _strict_response_validation=True, default_query={"query_param": "bar"}
+            base_url=base_url, _strict_response_validation=True, default_query={"query_param": "bar"}
         )
         request = client._build_request(FinalRequestOptions(method="get", url="/foo"))
         url = httpx.URL(request.url)
@@ -1375,9 +1321,7 @@ class TestAsyncIdentety:
         assert response.foo == 2
 
     def test_base_url_setter(self) -> None:
-        client = AsyncIdentety(
-            base_url="https://example.com/from_init", api_key=api_key, _strict_response_validation=True
-        )
+        client = AsyncIdentety(base_url="https://example.com/from_init", _strict_response_validation=True)
         assert client.base_url == "https://example.com/from_init/"
 
         client.base_url = "https://example.com/from_setter"  # type: ignore[assignment]
@@ -1386,18 +1330,15 @@ class TestAsyncIdentety:
 
     def test_base_url_env(self) -> None:
         with update_env(IDENTETY_BASE_URL="http://localhost:5000/from/env"):
-            client = AsyncIdentety(api_key=api_key, _strict_response_validation=True)
+            client = AsyncIdentety(_strict_response_validation=True)
             assert client.base_url == "http://localhost:5000/from/env/"
 
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncIdentety(
-                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
-            ),
+            AsyncIdentety(base_url="http://localhost:5000/custom/path/", _strict_response_validation=True),
             AsyncIdentety(
                 base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
@@ -1417,12 +1358,9 @@ class TestAsyncIdentety:
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncIdentety(
-                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
-            ),
+            AsyncIdentety(base_url="http://localhost:5000/custom/path/", _strict_response_validation=True),
             AsyncIdentety(
                 base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
@@ -1442,12 +1380,9 @@ class TestAsyncIdentety:
     @pytest.mark.parametrize(
         "client",
         [
-            AsyncIdentety(
-                base_url="http://localhost:5000/custom/path/", api_key=api_key, _strict_response_validation=True
-            ),
+            AsyncIdentety(base_url="http://localhost:5000/custom/path/", _strict_response_validation=True),
             AsyncIdentety(
                 base_url="http://localhost:5000/custom/path/",
-                api_key=api_key,
                 _strict_response_validation=True,
                 http_client=httpx.AsyncClient(),
             ),
@@ -1465,7 +1400,7 @@ class TestAsyncIdentety:
         assert request.url == "https://myapi.com/foo"
 
     async def test_copied_client_does_not_close_http(self) -> None:
-        client = AsyncIdentety(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AsyncIdentety(base_url=base_url, _strict_response_validation=True)
         assert not client.is_closed()
 
         copied = client.copy()
@@ -1477,7 +1412,7 @@ class TestAsyncIdentety:
         assert not client.is_closed()
 
     async def test_client_context_manager(self) -> None:
-        client = AsyncIdentety(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AsyncIdentety(base_url=base_url, _strict_response_validation=True)
         async with client as c2:
             assert c2 is client
             assert not c2.is_closed()
@@ -1499,9 +1434,7 @@ class TestAsyncIdentety:
 
     async def test_client_max_retries_validation(self) -> None:
         with pytest.raises(TypeError, match=r"max_retries cannot be None"):
-            AsyncIdentety(
-                base_url=base_url, api_key=api_key, _strict_response_validation=True, max_retries=cast(Any, None)
-            )
+            AsyncIdentety(base_url=base_url, _strict_response_validation=True, max_retries=cast(Any, None))
 
     @pytest.mark.respx(base_url=base_url)
     @pytest.mark.asyncio
@@ -1511,12 +1444,12 @@ class TestAsyncIdentety:
 
         respx_mock.get("/foo").mock(return_value=httpx.Response(200, text="my-custom-format"))
 
-        strict_client = AsyncIdentety(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        strict_client = AsyncIdentety(base_url=base_url, _strict_response_validation=True)
 
         with pytest.raises(APIResponseValidationError):
             await strict_client.get("/foo", cast_to=Model)
 
-        client = AsyncIdentety(base_url=base_url, api_key=api_key, _strict_response_validation=False)
+        client = AsyncIdentety(base_url=base_url, _strict_response_validation=False)
 
         response = await client.get("/foo", cast_to=Model)
         assert isinstance(response, str)  # type: ignore[unreachable]
@@ -1525,32 +1458,32 @@ class TestAsyncIdentety:
         "remaining_retries,retry_after,timeout",
         [
             [3, "20", 20],
-            [3, "0", 0],
-            [3, "-10", 0],
+            [3, "0", 0.5],
+            [3, "-10", 0.5],
             [3, "60", 60],
-            [3, "61", 0],
+            [3, "61", 0.5],
             [3, "Fri, 29 Sep 2023 16:26:57 GMT", 20],
-            [3, "Fri, 29 Sep 2023 16:26:37 GMT", 0],
-            [3, "Fri, 29 Sep 2023 16:26:27 GMT", 0],
+            [3, "Fri, 29 Sep 2023 16:26:37 GMT", 0.5],
+            [3, "Fri, 29 Sep 2023 16:26:27 GMT", 0.5],
             [3, "Fri, 29 Sep 2023 16:27:37 GMT", 60],
-            [3, "Fri, 29 Sep 2023 16:27:38 GMT", 0],
-            [3, "99999999999999999999999999999999999", 0],
-            [3, "Zun, 29 Sep 2023 16:26:27 GMT", 0],
-            [3, "", 0],
-            [2, "", 0 * 2.0],
-            [1, "", 0 * 4.0],
-            [-1100, "", 30],  # test large number potentially overflowing
+            [3, "Fri, 29 Sep 2023 16:27:38 GMT", 0.5],
+            [3, "99999999999999999999999999999999999", 0.5],
+            [3, "Zun, 29 Sep 2023 16:26:27 GMT", 0.5],
+            [3, "", 0.5],
+            [2, "", 0.5 * 2.0],
+            [1, "", 0.5 * 4.0],
+            [-1100, "", 8],  # test large number potentially overflowing
         ],
     )
     @mock.patch("time.time", mock.MagicMock(return_value=1696004797))
     @pytest.mark.asyncio
     async def test_parse_retry_after_header(self, remaining_retries: int, retry_after: str, timeout: float) -> None:
-        client = AsyncIdentety(base_url=base_url, api_key=api_key, _strict_response_validation=True)
+        client = AsyncIdentety(base_url=base_url, _strict_response_validation=True)
 
         headers = httpx.Headers({"retry-after": retry_after})
         options = FinalRequestOptions(method="get", url="/foo", max_retries=3)
         calculated = client._calculate_retry_timeout(remaining_retries, options, headers)
-        assert calculated == pytest.approx(timeout, 0 * 0.875)  # pyright: ignore[reportUnknownMemberType]
+        assert calculated == pytest.approx(timeout, 0.5 * 0.875)  # pyright: ignore[reportUnknownMemberType]
 
     @mock.patch("identety._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)

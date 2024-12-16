@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from typing import Any, Union, Mapping
 from typing_extensions import Self, override
 
@@ -25,7 +26,7 @@ from ._utils import (
 from ._version import __version__
 from .resources import app, orgs, roles, users, clients
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
-from ._exceptions import APIStatusError
+from ._exceptions import IdentetyError, APIStatusError
 from ._base_client import (
     DEFAULT_MAX_RETRIES,
     SyncAPIClient,
@@ -54,10 +55,12 @@ class Identety(SyncAPIClient):
     with_streaming_response: IdentetyWithStreamedResponse
 
     # client options
+    api_key: str
 
     def __init__(
         self,
         *,
+        api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -77,7 +80,18 @@ class Identety(SyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new synchronous identety client instance."""
+        """Construct a new synchronous identety client instance.
+
+        This automatically infers the `api_key` argument from the `X_API_KEY` environment variable if it is not provided.
+        """
+        if api_key is None:
+            api_key = os.environ.get("X_API_KEY")
+        if api_key is None:
+            raise IdentetyError(
+                "The api_key client option must be set either by passing api_key to the client or by setting the X_API_KEY environment variable"
+            )
+        self.api_key = api_key
+
         super().__init__(
             version=__version__,
             base_url=base_url,
@@ -104,6 +118,12 @@ class Identety(SyncAPIClient):
 
     @property
     @override
+    def auth_headers(self) -> dict[str, str]:
+        api_key = self.api_key
+        return {"x-api-key": api_key}
+
+    @property
+    @override
     def default_headers(self) -> dict[str, str | Omit]:
         return {
             **super().default_headers,
@@ -114,6 +134,7 @@ class Identety(SyncAPIClient):
     def copy(
         self,
         *,
+        api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
         http_client: httpx.Client | None = None,
@@ -147,6 +168,7 @@ class Identety(SyncAPIClient):
 
         http_client = http_client or self._client
         return self.__class__(
+            api_key=api_key or self.api_key,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,
@@ -204,10 +226,12 @@ class AsyncIdentety(AsyncAPIClient):
     with_streaming_response: AsyncIdentetyWithStreamedResponse
 
     # client options
+    api_key: str
 
     def __init__(
         self,
         *,
+        api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -227,7 +251,18 @@ class AsyncIdentety(AsyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new async identety client instance."""
+        """Construct a new async identety client instance.
+
+        This automatically infers the `api_key` argument from the `X_API_KEY` environment variable if it is not provided.
+        """
+        if api_key is None:
+            api_key = os.environ.get("X_API_KEY")
+        if api_key is None:
+            raise IdentetyError(
+                "The api_key client option must be set either by passing api_key to the client or by setting the X_API_KEY environment variable"
+            )
+        self.api_key = api_key
+
         super().__init__(
             version=__version__,
             base_url=base_url,
@@ -254,6 +289,12 @@ class AsyncIdentety(AsyncAPIClient):
 
     @property
     @override
+    def auth_headers(self) -> dict[str, str]:
+        api_key = self.api_key
+        return {"x-api-key": api_key}
+
+    @property
+    @override
     def default_headers(self) -> dict[str, str | Omit]:
         return {
             **super().default_headers,
@@ -264,6 +305,7 @@ class AsyncIdentety(AsyncAPIClient):
     def copy(
         self,
         *,
+        api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
         http_client: httpx.AsyncClient | None = None,
@@ -297,6 +339,7 @@ class AsyncIdentety(AsyncAPIClient):
 
         http_client = http_client or self._client
         return self.__class__(
+            api_key=api_key or self.api_key,
             base_url=base_url or self.base_url,
             timeout=self.timeout if isinstance(timeout, NotGiven) else timeout,
             http_client=http_client,

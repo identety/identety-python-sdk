@@ -28,17 +28,25 @@ from identety import Identety
 
 client = Identety()
 
-client = client.clients.create(
-    name="name",
-    type="public",
+user = client.users.create(
+    address={
+        "country": "USA",
+        "locality": "New York",
+        "postal_code": "10001",
+        "region": "NY",
+        "street_address": "123 Main St",
+    },
+    email="john@example.com",
+    family_name="Doe",
+    given_name="John",
+    locale="en-US",
+    metadata={"customField": "value"},
+    name="John Doe",
+    password="password123",
+    picture="https://example.com/photo.jpg",
 )
-print(client.id)
+print(user.id)
 ```
-
-While you can provide an `api_key` keyword argument,
-we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/)
-to add `X_API_KEY="My API Key"` to your `.env` file
-so that your API Key is not stored in source control.
 
 ## Async usage
 
@@ -52,11 +60,24 @@ client = AsyncIdentety()
 
 
 async def main() -> None:
-    client = await client.clients.create(
-        name="name",
-        type="public",
+    user = await client.users.create(
+        address={
+            "country": "USA",
+            "locality": "New York",
+            "postal_code": "10001",
+            "region": "NY",
+            "street_address": "123 Main St",
+        },
+        email="john@example.com",
+        family_name="Doe",
+        given_name="John",
+        locale="en-US",
+        metadata={"customField": "value"},
+        name="John Doe",
+        password="password123",
+        picture="https://example.com/photo.jpg",
     )
-    print(client.id)
+    print(user.id)
 
 
 asyncio.run(main())
@@ -89,9 +110,22 @@ from identety import Identety
 client = Identety()
 
 try:
-    client.clients.create(
-        name="name",
-        type="public",
+    client.users.create(
+        address={
+            "country": "USA",
+            "locality": "New York",
+            "postal_code": "10001",
+            "region": "NY",
+            "street_address": "123 Main St",
+        },
+        email="john@example.com",
+        family_name="Doe",
+        given_name="John",
+        locale="en-US",
+        metadata={"customField": "value"},
+        name="John Doe",
+        password="password123",
+        picture="https://example.com/photo.jpg",
     )
 except identety.APIConnectionError as e:
     print("The server could not be reached")
@@ -135,9 +169,22 @@ client = Identety(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).clients.create(
-    name="name",
-    type="public",
+client.with_options(max_retries=5).users.create(
+    address={
+        "country": "USA",
+        "locality": "New York",
+        "postal_code": "10001",
+        "region": "NY",
+        "street_address": "123 Main St",
+    },
+    email="john@example.com",
+    family_name="Doe",
+    given_name="John",
+    locale="en-US",
+    metadata={"customField": "value"},
+    name="John Doe",
+    password="password123",
+    picture="https://example.com/photo.jpg",
 )
 ```
 
@@ -161,9 +208,22 @@ client = Identety(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).clients.create(
-    name="name",
-    type="public",
+client.with_options(timeout=5.0).users.create(
+    address={
+        "country": "USA",
+        "locality": "New York",
+        "postal_code": "10001",
+        "region": "NY",
+        "street_address": "123 Main St",
+    },
+    email="john@example.com",
+    family_name="Doe",
+    given_name="John",
+    locale="en-US",
+    metadata={"customField": "value"},
+    name="John Doe",
+    password="password123",
+    picture="https://example.com/photo.jpg",
 )
 ```
 
@@ -205,14 +265,29 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from identety import Identety
 
 client = Identety()
-response = client.clients.with_raw_response.create(
-    name="name",
-    type="public",
+response = client.users.with_raw_response.create(
+    address={
+        "country": "USA",
+        "locality": "New York",
+        "postal_code": "10001",
+        "region": "NY",
+        "street_address": "123 Main St",
+    },
+    email="john@example.com",
+    family_name="Doe",
+    given_name="John",
+    locale="en-US",
+    metadata={
+        "customField": "value"
+    },
+    name="John Doe",
+    password="password123",
+    picture="https://example.com/photo.jpg",
 )
 print(response.headers.get('X-My-Header'))
 
-client = response.parse()  # get the object that `clients.create()` would have returned
-print(client.id)
+user = response.parse()  # get the object that `users.create()` would have returned
+print(user.id)
 ```
 
 These methods return an [`APIResponse`](https://github.com/identety/identety-python-sdk/tree/main/src/identety/_response.py) object.
@@ -226,9 +301,22 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.clients.with_streaming_response.create(
-    name="name",
-    type="public",
+with client.users.with_streaming_response.create(
+    address={
+        "country": "USA",
+        "locality": "New York",
+        "postal_code": "10001",
+        "region": "NY",
+        "street_address": "123 Main St",
+    },
+    email="john@example.com",
+    family_name="Doe",
+    given_name="John",
+    locale="en-US",
+    metadata={"customField": "value"},
+    name="John Doe",
+    password="password123",
+    picture="https://example.com/photo.jpg",
 ) as response:
     print(response.headers.get("X-My-Header"))
 

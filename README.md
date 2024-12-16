@@ -48,6 +48,11 @@ user = client.users.create(
 print(user.id)
 ```
 
+While you can provide an `api_key` keyword argument,
+we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/)
+to add `X_API_KEY="My API Key"` to your `.env` file
+so that your API Key is not stored in source control.
+
 ## Async usage
 
 Simply import `AsyncIdentety` instead of `Identety` and use `await` with each API call:
@@ -153,7 +158,7 @@ Error codes are as followed:
 
 ### Retries
 
-Certain errors are automatically retried 10 times by default, with a short exponential backoff.
+Certain errors are automatically retried 2 times by default, with a short exponential backoff.
 Connection errors (for example, due to a network connectivity problem), 408 Request Timeout, 409 Conflict,
 429 Rate Limit, and >=500 Internal errors are all retried by default.
 

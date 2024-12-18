@@ -1,5 +1,29 @@
 # Changelog
 
+## 3.0.0 (2024-12-18)
+
+Full Changelog: [v2.0.0...v3.0.0](https://github.com/identety/identety-python-sdk/compare/v2.0.0...v3.0.0)
+
+### Features
+
+* **api:** manual updates ([#22](https://github.com/identety/identety-python-sdk/issues/22)) ([0caa72c](https://github.com/identety/identety-python-sdk/commit/0caa72c151bc0666eef7e5dac78c979e6ee01388))
+* **api:** manual updates ([#24](https://github.com/identety/identety-python-sdk/issues/24)) ([e62ca67](https://github.com/identety/identety-python-sdk/commit/e62ca67078646d367c63e1c54942571cbe8333a1))
+* **api:** manual updates ([#25](https://github.com/identety/identety-python-sdk/issues/25)) ([a3a6e46](https://github.com/identety/identety-python-sdk/commit/a3a6e46411412638a754ba42d828f0c70256c8b6))
+* **api:** manual updates ([#26](https://github.com/identety/identety-python-sdk/issues/26)) ([fe253f1](https://github.com/identety/identety-python-sdk/commit/fe253f1b471b0fe1bd96ee3cd6e5b47ba0ab5ab1))
+* **api:** manual updates ([#27](https://github.com/identety/identety-python-sdk/issues/27)) ([c57c613](https://github.com/identety/identety-python-sdk/commit/c57c6139103d1a7051d543010f4a80110a47c8d7))
+
+
+### Chores
+
+* **internal:** codegen related update ([#28](https://github.com/identety/identety-python-sdk/issues/28)) ([c22c1af](https://github.com/identety/identety-python-sdk/commit/c22c1af86c0836eb9aa3174b2a3484fbb85c59d3))
+* **internal:** codegen related update ([#29](https://github.com/identety/identety-python-sdk/issues/29)) ([80434bb](https://github.com/identety/identety-python-sdk/commit/80434bbde43b909b7b0d108cd68576a62da11b69))
+* **internal:** fix some typos ([#31](https://github.com/identety/identety-python-sdk/issues/31)) ([2b2eb1a](https://github.com/identety/identety-python-sdk/commit/2b2eb1ac5bde2970487ae3db3f789630cc9df961))
+
+
+### Documentation
+
+* **readme:** example snippet for client context manager ([#30](https://github.com/identety/identety-python-sdk/issues/30)) ([294195e](https://github.com/identety/identety-python-sdk/commit/294195eb4433dcf23a38a5f0c019e310456dabef))
+
 ## 2.0.0 (2024-12-16)
 
 Full Changelog: [v1.1.0...v2.0.0](https://github.com/identety/identety-python-sdk/compare/v1.1.0...v2.0.0)

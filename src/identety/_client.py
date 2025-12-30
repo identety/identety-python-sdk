@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Union, Mapping
+from typing import TYPE_CHECKING, Any, Mapping
 from typing_extensions import Self, override
 
 import httpx
@@ -11,20 +11,17 @@ import httpx
 from . import _exceptions
 from ._qs import Querystring
 from ._types import (
-    NOT_GIVEN,
     Omit,
     Timeout,
     NotGiven,
     Transport,
     ProxiesTypes,
     RequestOptions,
+    not_given,
 )
-from ._utils import (
-    is_given,
-    get_async_library,
-)
+from ._utils import is_given, get_async_library
+from ._compat import cached_property
 from ._version import __version__
-from .resources import app, orgs, roles, users, clients
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import IdentetyError, APIStatusError
 from ._base_client import (
@@ -32,6 +29,14 @@ from ._base_client import (
     SyncAPIClient,
     AsyncAPIClient,
 )
+
+if TYPE_CHECKING:
+    from .resources import app, orgs, roles, users, clients
+    from .resources.app import AppResource, AsyncAppResource
+    from .resources.orgs import OrgsResource, AsyncOrgsResource
+    from .resources.roles import RolesResource, AsyncRolesResource
+    from .resources.users import UsersResource, AsyncUsersResource
+    from .resources.clients import ClientsResource, AsyncClientsResource
 
 __all__ = [
     "Timeout",
@@ -46,14 +51,6 @@ __all__ = [
 
 
 class Identety(SyncAPIClient):
-    app: app.AppResource
-    clients: clients.ClientsResource
-    users: users.UsersResource
-    orgs: orgs.OrgsResource
-    roles: roles.RolesResource
-    with_raw_response: IdentetyWithRawResponse
-    with_streaming_response: IdentetyWithStreamedResponse
-
     # client options
     api_key: str
 
@@ -62,7 +59,7 @@ class Identety(SyncAPIClient):
         *,
         api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
-        timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
         default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -80,7 +77,7 @@ class Identety(SyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new synchronous identety client instance.
+        """Construct a new synchronous Identety client instance.
 
         This automatically infers the `api_key` argument from the `X_API_KEY` environment variable if it is not provided.
         """
@@ -103,13 +100,43 @@ class Identety(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.app = app.AppResource(self)
-        self.clients = clients.ClientsResource(self)
-        self.users = users.UsersResource(self)
-        self.orgs = orgs.OrgsResource(self)
-        self.roles = roles.RolesResource(self)
-        self.with_raw_response = IdentetyWithRawResponse(self)
-        self.with_streaming_response = IdentetyWithStreamedResponse(self)
+    @cached_property
+    def app(self) -> AppResource:
+        from .resources.app import AppResource
+
+        return AppResource(self)
+
+    @cached_property
+    def clients(self) -> ClientsResource:
+        from .resources.clients import ClientsResource
+
+        return ClientsResource(self)
+
+    @cached_property
+    def users(self) -> UsersResource:
+        from .resources.users import UsersResource
+
+        return UsersResource(self)
+
+    @cached_property
+    def orgs(self) -> OrgsResource:
+        from .resources.orgs import OrgsResource
+
+        return OrgsResource(self)
+
+    @cached_property
+    def roles(self) -> RolesResource:
+        from .resources.roles import RolesResource
+
+        return RolesResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> IdentetyWithRawResponse:
+        return IdentetyWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> IdentetyWithStreamedResponse:
+        return IdentetyWithStreamedResponse(self)
 
     @property
     @override
@@ -136,9 +163,9 @@ class Identety(SyncAPIClient):
         *,
         api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
-        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.Client | None = None,
-        max_retries: int | NotGiven = NOT_GIVEN,
+        max_retries: int | NotGiven = not_given,
         default_headers: Mapping[str, str] | None = None,
         set_default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -217,14 +244,6 @@ class Identety(SyncAPIClient):
 
 
 class AsyncIdentety(AsyncAPIClient):
-    app: app.AsyncAppResource
-    clients: clients.AsyncClientsResource
-    users: users.AsyncUsersResource
-    orgs: orgs.AsyncOrgsResource
-    roles: roles.AsyncRolesResource
-    with_raw_response: AsyncIdentetyWithRawResponse
-    with_streaming_response: AsyncIdentetyWithStreamedResponse
-
     # client options
     api_key: str
 
@@ -233,7 +252,7 @@ class AsyncIdentety(AsyncAPIClient):
         *,
         api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
-        timeout: Union[float, Timeout, None, NotGiven] = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
         default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -251,7 +270,7 @@ class AsyncIdentety(AsyncAPIClient):
         # part of our public interface in the future.
         _strict_response_validation: bool = False,
     ) -> None:
-        """Construct a new async identety client instance.
+        """Construct a new async AsyncIdentety client instance.
 
         This automatically infers the `api_key` argument from the `X_API_KEY` environment variable if it is not provided.
         """
@@ -274,13 +293,43 @@ class AsyncIdentety(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.app = app.AsyncAppResource(self)
-        self.clients = clients.AsyncClientsResource(self)
-        self.users = users.AsyncUsersResource(self)
-        self.orgs = orgs.AsyncOrgsResource(self)
-        self.roles = roles.AsyncRolesResource(self)
-        self.with_raw_response = AsyncIdentetyWithRawResponse(self)
-        self.with_streaming_response = AsyncIdentetyWithStreamedResponse(self)
+    @cached_property
+    def app(self) -> AsyncAppResource:
+        from .resources.app import AsyncAppResource
+
+        return AsyncAppResource(self)
+
+    @cached_property
+    def clients(self) -> AsyncClientsResource:
+        from .resources.clients import AsyncClientsResource
+
+        return AsyncClientsResource(self)
+
+    @cached_property
+    def users(self) -> AsyncUsersResource:
+        from .resources.users import AsyncUsersResource
+
+        return AsyncUsersResource(self)
+
+    @cached_property
+    def orgs(self) -> AsyncOrgsResource:
+        from .resources.orgs import AsyncOrgsResource
+
+        return AsyncOrgsResource(self)
+
+    @cached_property
+    def roles(self) -> AsyncRolesResource:
+        from .resources.roles import AsyncRolesResource
+
+        return AsyncRolesResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> AsyncIdentetyWithRawResponse:
+        return AsyncIdentetyWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> AsyncIdentetyWithStreamedResponse:
+        return AsyncIdentetyWithStreamedResponse(self)
 
     @property
     @override
@@ -307,9 +356,9 @@ class AsyncIdentety(AsyncAPIClient):
         *,
         api_key: str | None = None,
         base_url: str | httpx.URL | None = None,
-        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.AsyncClient | None = None,
-        max_retries: int | NotGiven = NOT_GIVEN,
+        max_retries: int | NotGiven = not_given,
         default_headers: Mapping[str, str] | None = None,
         set_default_headers: Mapping[str, str] | None = None,
         default_query: Mapping[str, object] | None = None,
@@ -388,39 +437,151 @@ class AsyncIdentety(AsyncAPIClient):
 
 
 class IdentetyWithRawResponse:
+    _client: Identety
+
     def __init__(self, client: Identety) -> None:
-        self.app = app.AppResourceWithRawResponse(client.app)
-        self.clients = clients.ClientsResourceWithRawResponse(client.clients)
-        self.users = users.UsersResourceWithRawResponse(client.users)
-        self.orgs = orgs.OrgsResourceWithRawResponse(client.orgs)
-        self.roles = roles.RolesResourceWithRawResponse(client.roles)
+        self._client = client
+
+    @cached_property
+    def app(self) -> app.AppResourceWithRawResponse:
+        from .resources.app import AppResourceWithRawResponse
+
+        return AppResourceWithRawResponse(self._client.app)
+
+    @cached_property
+    def clients(self) -> clients.ClientsResourceWithRawResponse:
+        from .resources.clients import ClientsResourceWithRawResponse
+
+        return ClientsResourceWithRawResponse(self._client.clients)
+
+    @cached_property
+    def users(self) -> users.UsersResourceWithRawResponse:
+        from .resources.users import UsersResourceWithRawResponse
+
+        return UsersResourceWithRawResponse(self._client.users)
+
+    @cached_property
+    def orgs(self) -> orgs.OrgsResourceWithRawResponse:
+        from .resources.orgs import OrgsResourceWithRawResponse
+
+        return OrgsResourceWithRawResponse(self._client.orgs)
+
+    @cached_property
+    def roles(self) -> roles.RolesResourceWithRawResponse:
+        from .resources.roles import RolesResourceWithRawResponse
+
+        return RolesResourceWithRawResponse(self._client.roles)
 
 
 class AsyncIdentetyWithRawResponse:
+    _client: AsyncIdentety
+
     def __init__(self, client: AsyncIdentety) -> None:
-        self.app = app.AsyncAppResourceWithRawResponse(client.app)
-        self.clients = clients.AsyncClientsResourceWithRawResponse(client.clients)
-        self.users = users.AsyncUsersResourceWithRawResponse(client.users)
-        self.orgs = orgs.AsyncOrgsResourceWithRawResponse(client.orgs)
-        self.roles = roles.AsyncRolesResourceWithRawResponse(client.roles)
+        self._client = client
+
+    @cached_property
+    def app(self) -> app.AsyncAppResourceWithRawResponse:
+        from .resources.app import AsyncAppResourceWithRawResponse
+
+        return AsyncAppResourceWithRawResponse(self._client.app)
+
+    @cached_property
+    def clients(self) -> clients.AsyncClientsResourceWithRawResponse:
+        from .resources.clients import AsyncClientsResourceWithRawResponse
+
+        return AsyncClientsResourceWithRawResponse(self._client.clients)
+
+    @cached_property
+    def users(self) -> users.AsyncUsersResourceWithRawResponse:
+        from .resources.users import AsyncUsersResourceWithRawResponse
+
+        return AsyncUsersResourceWithRawResponse(self._client.users)
+
+    @cached_property
+    def orgs(self) -> orgs.AsyncOrgsResourceWithRawResponse:
+        from .resources.orgs import AsyncOrgsResourceWithRawResponse
+
+        return AsyncOrgsResourceWithRawResponse(self._client.orgs)
+
+    @cached_property
+    def roles(self) -> roles.AsyncRolesResourceWithRawResponse:
+        from .resources.roles import AsyncRolesResourceWithRawResponse
+
+        return AsyncRolesResourceWithRawResponse(self._client.roles)
 
 
 class IdentetyWithStreamedResponse:
+    _client: Identety
+
     def __init__(self, client: Identety) -> None:
-        self.app = app.AppResourceWithStreamingResponse(client.app)
-        self.clients = clients.ClientsResourceWithStreamingResponse(client.clients)
-        self.users = users.UsersResourceWithStreamingResponse(client.users)
-        self.orgs = orgs.OrgsResourceWithStreamingResponse(client.orgs)
-        self.roles = roles.RolesResourceWithStreamingResponse(client.roles)
+        self._client = client
+
+    @cached_property
+    def app(self) -> app.AppResourceWithStreamingResponse:
+        from .resources.app import AppResourceWithStreamingResponse
+
+        return AppResourceWithStreamingResponse(self._client.app)
+
+    @cached_property
+    def clients(self) -> clients.ClientsResourceWithStreamingResponse:
+        from .resources.clients import ClientsResourceWithStreamingResponse
+
+        return ClientsResourceWithStreamingResponse(self._client.clients)
+
+    @cached_property
+    def users(self) -> users.UsersResourceWithStreamingResponse:
+        from .resources.users import UsersResourceWithStreamingResponse
+
+        return UsersResourceWithStreamingResponse(self._client.users)
+
+    @cached_property
+    def orgs(self) -> orgs.OrgsResourceWithStreamingResponse:
+        from .resources.orgs import OrgsResourceWithStreamingResponse
+
+        return OrgsResourceWithStreamingResponse(self._client.orgs)
+
+    @cached_property
+    def roles(self) -> roles.RolesResourceWithStreamingResponse:
+        from .resources.roles import RolesResourceWithStreamingResponse
+
+        return RolesResourceWithStreamingResponse(self._client.roles)
 
 
 class AsyncIdentetyWithStreamedResponse:
+    _client: AsyncIdentety
+
     def __init__(self, client: AsyncIdentety) -> None:
-        self.app = app.AsyncAppResourceWithStreamingResponse(client.app)
-        self.clients = clients.AsyncClientsResourceWithStreamingResponse(client.clients)
-        self.users = users.AsyncUsersResourceWithStreamingResponse(client.users)
-        self.orgs = orgs.AsyncOrgsResourceWithStreamingResponse(client.orgs)
-        self.roles = roles.AsyncRolesResourceWithStreamingResponse(client.roles)
+        self._client = client
+
+    @cached_property
+    def app(self) -> app.AsyncAppResourceWithStreamingResponse:
+        from .resources.app import AsyncAppResourceWithStreamingResponse
+
+        return AsyncAppResourceWithStreamingResponse(self._client.app)
+
+    @cached_property
+    def clients(self) -> clients.AsyncClientsResourceWithStreamingResponse:
+        from .resources.clients import AsyncClientsResourceWithStreamingResponse
+
+        return AsyncClientsResourceWithStreamingResponse(self._client.clients)
+
+    @cached_property
+    def users(self) -> users.AsyncUsersResourceWithStreamingResponse:
+        from .resources.users import AsyncUsersResourceWithStreamingResponse
+
+        return AsyncUsersResourceWithStreamingResponse(self._client.users)
+
+    @cached_property
+    def orgs(self) -> orgs.AsyncOrgsResourceWithStreamingResponse:
+        from .resources.orgs import AsyncOrgsResourceWithStreamingResponse
+
+        return AsyncOrgsResourceWithStreamingResponse(self._client.orgs)
+
+    @cached_property
+    def roles(self) -> roles.AsyncRolesResourceWithStreamingResponse:
+        from .resources.roles import AsyncRolesResourceWithStreamingResponse
+
+        return AsyncRolesResourceWithStreamingResponse(self._client.roles)
 
 
 Client = Identety

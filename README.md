@@ -1,12 +1,13 @@
 # Identety Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/identety.svg)](https://pypi.org/project/identety/)
+<!-- prettier-ignore -->
+[![PyPI version](https://img.shields.io/pypi/v/identety.svg?label=pypi%20(stable))](https://pypi.org/project/identety/)
 
-The Identety Python library provides convenient access to the Identety REST API from any Python 3.8+
+The Identety Python library provides convenient access to the Identety REST API from any Python 3.9+
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
-It is generated with [Stainless](https://www.stainlessapi.com/).
+It is generated with [Stainless](https://www.stainless.com/).
 
 ## Documentation
 
@@ -24,9 +25,12 @@ pip install identety
 The full API of this library can be found in [api.md](api.md).
 
 ```python
+import os
 from identety import Identety
 
-client = Identety()
+client = Identety(
+    api_key=os.environ.get("X_API_KEY"),  # This is the default and can be omitted
+)
 
 user = client.users.create(
     address={
@@ -58,10 +62,13 @@ so that your API Key is not stored in source control.
 Simply import `AsyncIdentety` instead of `Identety` and use `await` with each API call:
 
 ```python
+import os
 import asyncio
 from identety import AsyncIdentety
 
-client = AsyncIdentety()
+client = AsyncIdentety(
+    api_key=os.environ.get("X_API_KEY"),  # This is the default and can be omitted
+)
 
 
 async def main() -> None:
@@ -90,6 +97,54 @@ asyncio.run(main())
 
 Functionality between the synchronous and asynchronous clients is otherwise identical.
 
+### With aiohttp
+
+By default, the async client uses `httpx` for HTTP requests. However, for improved concurrency performance you may also use `aiohttp` as the HTTP backend.
+
+You can enable this by installing `aiohttp`:
+
+```sh
+# install from PyPI
+pip install identety[aiohttp]
+```
+
+Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
+
+```python
+import os
+import asyncio
+from identety import DefaultAioHttpClient
+from identety import AsyncIdentety
+
+
+async def main() -> None:
+    async with AsyncIdentety(
+        api_key=os.environ.get("X_API_KEY"),  # This is the default and can be omitted
+        http_client=DefaultAioHttpClient(),
+    ) as client:
+        user = await client.users.create(
+            address={
+                "country": "USA",
+                "locality": "New York",
+                "postal_code": "10001",
+                "region": "NY",
+                "street_address": "123 Main St",
+            },
+            email="john@example.com",
+            family_name="Doe",
+            given_name="John",
+            locale="en-US",
+            metadata={"customField": "value"},
+            name="John Doe",
+            password="password123",
+            picture="https://example.com/photo.jpg",
+        )
+        print(user.id)
+
+
+asyncio.run(main())
+```
+
 ## Using types
 
 Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typing.html#typing.TypedDict). Responses are [Pydantic models](https://docs.pydantic.dev) which also provide helper methods for things like:
@@ -98,6 +153,35 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 - Converting to a dictionary, `model.to_dict()`
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
+
+## Nested params
+
+Nested parameters are dictionaries, typed using `TypedDict`, for example:
+
+```python
+from identety import Identety
+
+client = Identety()
+
+user = client.users.create(
+    address={
+        "country": "USA",
+        "locality": "New York",
+        "postal_code": "10001",
+        "region": "NY",
+        "street_address": "123 Main St",
+    },
+    email="john@example.com",
+    family_name="Doe",
+    given_name="John",
+    locale="en-US",
+    metadata={"customField": "value"},
+    name="John Doe",
+    password="password123",
+    picture="https://example.com/photo.jpg",
+)
+print(user.address)
+```
 
 ## Handling errors
 
@@ -196,7 +280,7 @@ client.with_options(max_retries=5).users.create(
 ### Timeouts
 
 By default requests time out after 1 minute. You can configure this with a `timeout` option,
-which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/#fine-tuning-the-configuration) object:
+which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/timeouts/#fine-tuning-the-configuration) object:
 
 ```python
 from identety import Identety
@@ -432,7 +516,7 @@ print(identety.__version__)
 
 ## Requirements
 
-Python 3.8 or higher.
+Python 3.9 or higher.
 
 ## Contributing
 

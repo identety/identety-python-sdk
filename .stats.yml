@@ -1,2 +1,4 @@
 configured_endpoints: 13
 openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/identety%2Fidentety-7108f4dd04c59263e08d559e50a40f81dcceafcccfd1c9dcd7d579f35b5c09a8.yml
+openapi_spec_hash: c068801912a23cea340b74dc0182e9cf
+config_hash: f403d4e5fb8eac2fc4e6c76f53ea4b12

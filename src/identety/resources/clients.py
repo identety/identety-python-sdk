@@ -8,11 +8,8 @@ from typing_extensions import Literal
 import httpx
 
 from ..types import client_list_params, client_create_params, client_update_params
-from .._types import NOT_GIVEN, Body, Query, Headers, NotGiven
-from .._utils import (
-    maybe_transform,
-    async_maybe_transform,
-)
+from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
+from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -32,7 +29,7 @@ class ClientsResource(SyncAPIResource):
     @cached_property
     def with_raw_response(self) -> ClientsResourceWithRawResponse:
         """
-        This property can be used as a prefix for any HTTP method call to return the
+        This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/identety/identety-python-sdk#accessing-raw-response-data-eg-headers
@@ -53,17 +50,16 @@ class ClientsResource(SyncAPIResource):
         *,
         name: str,
         type: Literal["public", "private", "m2m"],
-        allowed_grants: List[Literal["authorization_code", "client_credentials", "refresh_token"]]
-        | NotGiven = NOT_GIVEN,
-        allowed_scopes: List[str] | NotGiven = NOT_GIVEN,
-        redirect_uris: List[str] | NotGiven = NOT_GIVEN,
-        settings: object | NotGiven = NOT_GIVEN,
+        allowed_grants: List[Literal["authorization_code", "client_credentials", "refresh_token"]] | Omit = omit,
+        allowed_scopes: SequenceNotStr[str] | Omit = omit,
+        redirect_uris: SequenceNotStr[str] | Omit = omit,
+        settings: object | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Client:
         """
         Create client
@@ -117,7 +113,7 @@ class ClientsResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Client:
         """
         Get client details by id
@@ -146,17 +142,16 @@ class ClientsResource(SyncAPIResource):
         id: str,
         *,
         name: str,
-        allowed_grants: List[Literal["authorization_code", "client_credentials", "refresh_token"]]
-        | NotGiven = NOT_GIVEN,
-        allowed_scopes: List[str] | NotGiven = NOT_GIVEN,
-        redirect_uris: List[str] | NotGiven = NOT_GIVEN,
-        settings: object | NotGiven = NOT_GIVEN,
+        allowed_grants: List[Literal["authorization_code", "client_credentials", "refresh_token"]] | Omit = omit,
+        allowed_scopes: SequenceNotStr[str] | Omit = omit,
+        redirect_uris: SequenceNotStr[str] | Omit = omit,
+        settings: object | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Client:
         """
         Update client
@@ -219,16 +214,16 @@ class ClientsResource(SyncAPIResource):
             "created_at",
             "updated_at",
         ],
-        limit: float | NotGiven = NOT_GIVEN,
-        page: float | NotGiven = NOT_GIVEN,
-        sort: Literal["asc", "desc"] | NotGiven = NOT_GIVEN,
-        sort_by: str | NotGiven = NOT_GIVEN,
+        limit: float | Omit = omit,
+        page: float | Omit = omit,
+        sort: Literal["asc", "desc"] | Omit = omit,
+        sort_by: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ClientListResponse:
         """
         Get all clients
@@ -274,7 +269,7 @@ class ClientsResource(SyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Client:
         """
         Delete client
@@ -303,7 +298,7 @@ class AsyncClientsResource(AsyncAPIResource):
     @cached_property
     def with_raw_response(self) -> AsyncClientsResourceWithRawResponse:
         """
-        This property can be used as a prefix for any HTTP method call to return the
+        This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
         For more information, see https://www.github.com/identety/identety-python-sdk#accessing-raw-response-data-eg-headers
@@ -324,17 +319,16 @@ class AsyncClientsResource(AsyncAPIResource):
         *,
         name: str,
         type: Literal["public", "private", "m2m"],
-        allowed_grants: List[Literal["authorization_code", "client_credentials", "refresh_token"]]
-        | NotGiven = NOT_GIVEN,
-        allowed_scopes: List[str] | NotGiven = NOT_GIVEN,
-        redirect_uris: List[str] | NotGiven = NOT_GIVEN,
-        settings: object | NotGiven = NOT_GIVEN,
+        allowed_grants: List[Literal["authorization_code", "client_credentials", "refresh_token"]] | Omit = omit,
+        allowed_scopes: SequenceNotStr[str] | Omit = omit,
+        redirect_uris: SequenceNotStr[str] | Omit = omit,
+        settings: object | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Client:
         """
         Create client
@@ -388,7 +382,7 @@ class AsyncClientsResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Client:
         """
         Get client details by id
@@ -417,17 +411,16 @@ class AsyncClientsResource(AsyncAPIResource):
         id: str,
         *,
         name: str,
-        allowed_grants: List[Literal["authorization_code", "client_credentials", "refresh_token"]]
-        | NotGiven = NOT_GIVEN,
-        allowed_scopes: List[str] | NotGiven = NOT_GIVEN,
-        redirect_uris: List[str] | NotGiven = NOT_GIVEN,
-        settings: object | NotGiven = NOT_GIVEN,
+        allowed_grants: List[Literal["authorization_code", "client_credentials", "refresh_token"]] | Omit = omit,
+        allowed_scopes: SequenceNotStr[str] | Omit = omit,
+        redirect_uris: SequenceNotStr[str] | Omit = omit,
+        settings: object | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Client:
         """
         Update client
@@ -490,16 +483,16 @@ class AsyncClientsResource(AsyncAPIResource):
             "created_at",
             "updated_at",
         ],
-        limit: float | NotGiven = NOT_GIVEN,
-        page: float | NotGiven = NOT_GIVEN,
-        sort: Literal["asc", "desc"] | NotGiven = NOT_GIVEN,
-        sort_by: str | NotGiven = NOT_GIVEN,
+        limit: float | Omit = omit,
+        page: float | Omit = omit,
+        sort: Literal["asc", "desc"] | Omit = omit,
+        sort_by: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ClientListResponse:
         """
         Get all clients
@@ -545,7 +538,7 @@ class AsyncClientsResource(AsyncAPIResource):
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Client:
         """
         Delete client

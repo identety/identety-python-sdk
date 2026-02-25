@@ -1,12 +1,13 @@
 # Identety Python API library
 
-[![PyPI version](https://img.shields.io/pypi/v/identety.svg)](https://pypi.org/project/identety/)
+<!-- prettier-ignore -->
+[![PyPI version](https://img.shields.io/pypi/v/identety.svg?label=pypi%20(stable))](https://pypi.org/project/identety/)
 
-The Identety Python library provides convenient access to the Identety REST API from any Python 3.8+
+The Identety Python library provides convenient access to the Identety REST API from any Python 3.9+
 application. The library includes type definitions for all request params and response fields,
 and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
 
-It is generated with [Stainless](https://www.stainlessapi.com/).
+It is generated with [Stainless](https://www.stainless.com/).
 
 ## Documentation
 
@@ -24,15 +25,31 @@ pip install identety
 The full API of this library can be found in [api.md](api.md).
 
 ```python
+import os
 from identety import Identety
 
-client = Identety()
-
-client = client.clients.create(
-    name="name",
-    type="public",
+client = Identety(
+    api_key=os.environ.get("X_API_KEY"),  # This is the default and can be omitted
 )
-print(client.id)
+
+user = client.users.create(
+    address={
+        "country": "USA",
+        "locality": "New York",
+        "postal_code": "10001",
+        "region": "NY",
+        "street_address": "123 Main St",
+    },
+    email="john@example.com",
+    family_name="Doe",
+    given_name="John",
+    locale="en-US",
+    metadata={"customField": "value"},
+    name="John Doe",
+    password="password123",
+    picture="https://example.com/photo.jpg",
+)
+print(user.id)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -45,24 +62,88 @@ so that your API Key is not stored in source control.
 Simply import `AsyncIdentety` instead of `Identety` and use `await` with each API call:
 
 ```python
+import os
 import asyncio
 from identety import AsyncIdentety
 
-client = AsyncIdentety()
+client = AsyncIdentety(
+    api_key=os.environ.get("X_API_KEY"),  # This is the default and can be omitted
+)
 
 
 async def main() -> None:
-    client = await client.clients.create(
-        name="name",
-        type="public",
+    user = await client.users.create(
+        address={
+            "country": "USA",
+            "locality": "New York",
+            "postal_code": "10001",
+            "region": "NY",
+            "street_address": "123 Main St",
+        },
+        email="john@example.com",
+        family_name="Doe",
+        given_name="John",
+        locale="en-US",
+        metadata={"customField": "value"},
+        name="John Doe",
+        password="password123",
+        picture="https://example.com/photo.jpg",
     )
-    print(client.id)
+    print(user.id)
 
 
 asyncio.run(main())
 ```
 
 Functionality between the synchronous and asynchronous clients is otherwise identical.
+
+### With aiohttp
+
+By default, the async client uses `httpx` for HTTP requests. However, for improved concurrency performance you may also use `aiohttp` as the HTTP backend.
+
+You can enable this by installing `aiohttp`:
+
+```sh
+# install from PyPI
+pip install identety[aiohttp]
+```
+
+Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
+
+```python
+import os
+import asyncio
+from identety import DefaultAioHttpClient
+from identety import AsyncIdentety
+
+
+async def main() -> None:
+    async with AsyncIdentety(
+        api_key=os.environ.get("X_API_KEY"),  # This is the default and can be omitted
+        http_client=DefaultAioHttpClient(),
+    ) as client:
+        user = await client.users.create(
+            address={
+                "country": "USA",
+                "locality": "New York",
+                "postal_code": "10001",
+                "region": "NY",
+                "street_address": "123 Main St",
+            },
+            email="john@example.com",
+            family_name="Doe",
+            given_name="John",
+            locale="en-US",
+            metadata={"customField": "value"},
+            name="John Doe",
+            password="password123",
+            picture="https://example.com/photo.jpg",
+        )
+        print(user.id)
+
+
+asyncio.run(main())
+```
 
 ## Using types
 
@@ -72,6 +153,35 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 - Converting to a dictionary, `model.to_dict()`
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
+
+## Nested params
+
+Nested parameters are dictionaries, typed using `TypedDict`, for example:
+
+```python
+from identety import Identety
+
+client = Identety()
+
+user = client.users.create(
+    address={
+        "country": "USA",
+        "locality": "New York",
+        "postal_code": "10001",
+        "region": "NY",
+        "street_address": "123 Main St",
+    },
+    email="john@example.com",
+    family_name="Doe",
+    given_name="John",
+    locale="en-US",
+    metadata={"customField": "value"},
+    name="John Doe",
+    password="password123",
+    picture="https://example.com/photo.jpg",
+)
+print(user.address)
+```
 
 ## Handling errors
 
@@ -89,9 +199,22 @@ from identety import Identety
 client = Identety()
 
 try:
-    client.clients.create(
-        name="name",
-        type="public",
+    client.users.create(
+        address={
+            "country": "USA",
+            "locality": "New York",
+            "postal_code": "10001",
+            "region": "NY",
+            "street_address": "123 Main St",
+        },
+        email="john@example.com",
+        family_name="Doe",
+        given_name="John",
+        locale="en-US",
+        metadata={"customField": "value"},
+        name="John Doe",
+        password="password123",
+        picture="https://example.com/photo.jpg",
     )
 except identety.APIConnectionError as e:
     print("The server could not be reached")
@@ -104,7 +227,7 @@ except identety.APIStatusError as e:
     print(e.response)
 ```
 
-Error codes are as followed:
+Error codes are as follows:
 
 | Status Code | Error Type                 |
 | ----------- | -------------------------- |
@@ -135,16 +258,29 @@ client = Identety(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).clients.create(
-    name="name",
-    type="public",
+client.with_options(max_retries=5).users.create(
+    address={
+        "country": "USA",
+        "locality": "New York",
+        "postal_code": "10001",
+        "region": "NY",
+        "street_address": "123 Main St",
+    },
+    email="john@example.com",
+    family_name="Doe",
+    given_name="John",
+    locale="en-US",
+    metadata={"customField": "value"},
+    name="John Doe",
+    password="password123",
+    picture="https://example.com/photo.jpg",
 )
 ```
 
 ### Timeouts
 
 By default requests time out after 1 minute. You can configure this with a `timeout` option,
-which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/#fine-tuning-the-configuration) object:
+which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/timeouts/#fine-tuning-the-configuration) object:
 
 ```python
 from identety import Identety
@@ -161,9 +297,22 @@ client = Identety(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).clients.create(
-    name="name",
-    type="public",
+client.with_options(timeout=5.0).users.create(
+    address={
+        "country": "USA",
+        "locality": "New York",
+        "postal_code": "10001",
+        "region": "NY",
+        "street_address": "123 Main St",
+    },
+    email="john@example.com",
+    family_name="Doe",
+    given_name="John",
+    locale="en-US",
+    metadata={"customField": "value"},
+    name="John Doe",
+    password="password123",
+    picture="https://example.com/photo.jpg",
 )
 ```
 
@@ -205,14 +354,29 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from identety import Identety
 
 client = Identety()
-response = client.clients.with_raw_response.create(
-    name="name",
-    type="public",
+response = client.users.with_raw_response.create(
+    address={
+        "country": "USA",
+        "locality": "New York",
+        "postal_code": "10001",
+        "region": "NY",
+        "street_address": "123 Main St",
+    },
+    email="john@example.com",
+    family_name="Doe",
+    given_name="John",
+    locale="en-US",
+    metadata={
+        "customField": "value"
+    },
+    name="John Doe",
+    password="password123",
+    picture="https://example.com/photo.jpg",
 )
 print(response.headers.get('X-My-Header'))
 
-client = response.parse()  # get the object that `clients.create()` would have returned
-print(client.id)
+user = response.parse()  # get the object that `users.create()` would have returned
+print(user.id)
 ```
 
 These methods return an [`APIResponse`](https://github.com/identety/identety-python-sdk/tree/main/src/identety/_response.py) object.
@@ -226,9 +390,22 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.clients.with_streaming_response.create(
-    name="name",
-    type="public",
+with client.users.with_streaming_response.create(
+    address={
+        "country": "USA",
+        "locality": "New York",
+        "postal_code": "10001",
+        "region": "NY",
+        "street_address": "123 Main St",
+    },
+    email="john@example.com",
+    family_name="Doe",
+    given_name="John",
+    locale="en-US",
+    metadata={"customField": "value"},
+    name="John Doe",
+    password="password123",
+    picture="https://example.com/photo.jpg",
 ) as response:
     print(response.headers.get("X-My-Header"))
 
@@ -247,8 +424,7 @@ If you need to access undocumented endpoints, params, or response properties, th
 #### Undocumented endpoints
 
 To make requests to undocumented endpoints, you can make requests using `client.get`, `client.post`, and other
-http verbs. Options on the client will be respected (such as retries) will be respected when making this
-request.
+http verbs. Options on the client will be respected (such as retries) when making this request.
 
 ```py
 import httpx
@@ -305,12 +481,22 @@ client.with_options(http_client=DefaultHttpxClient(...))
 
 By default the library closes underlying HTTP connections whenever the client is [garbage collected](https://docs.python.org/3/reference/datamodel.html#object.__del__). You can manually close the client using the `.close()` method if desired, or with a context manager that closes when exiting.
 
+```py
+from identety import Identety
+
+with Identety() as client:
+  # make requests here
+  ...
+
+# HTTP client is now closed
+```
+
 ## Versioning
 
 This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) conventions, though certain backwards-incompatible changes may be released as minor versions:
 
 1. Changes that only affect static types, without breaking runtime behavior.
-2. Changes to library internals which are technically public but not intended or documented for external use. _(Please open a GitHub issue to let us know if you are relying on such internals)_.
+2. Changes to library internals which are technically public but not intended or documented for external use. _(Please open a GitHub issue to let us know if you are relying on such internals.)_
 3. Changes that we do not expect to impact the vast majority of users in practice.
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
@@ -330,7 +516,7 @@ print(identety.__version__)
 
 ## Requirements
 
-Python 3.8 or higher.
+Python 3.9 or higher.
 
 ## Contributing
 

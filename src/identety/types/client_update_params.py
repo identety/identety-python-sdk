@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import List
 from typing_extensions import Literal, Required, Annotated, TypedDict
 
+from .._types import SequenceNotStr
 from .._utils import PropertyInfo
 
 __all__ = ["ClientUpdateParams"]
@@ -19,10 +20,10 @@ class ClientUpdateParams(TypedDict, total=False):
     ]
     """Allowed Grants"""
 
-    allowed_scopes: Annotated[List[str], PropertyInfo(alias="allowedScopes")]
+    allowed_scopes: Annotated[SequenceNotStr[str], PropertyInfo(alias="allowedScopes")]
     """Allowed Scopes"""
 
-    redirect_uris: Annotated[List[str], PropertyInfo(alias="redirectUris")]
+    redirect_uris: Annotated[SequenceNotStr[str], PropertyInfo(alias="redirectUris")]
     """Redirect URIs"""
 
     settings: object

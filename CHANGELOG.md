@@ -1,5 +1,45 @@
 # Changelog
 
+## 3.0.0 (2026-02-25)
+
+Full Changelog: [v2.0.0...v3.0.0](https://github.com/identety/identety-python-sdk/compare/v2.0.0...v3.0.0)
+
+### Features
+
+* **api:** manual updates ([#22](https://github.com/identety/identety-python-sdk/issues/22)) ([0caa72c](https://github.com/identety/identety-python-sdk/commit/0caa72c151bc0666eef7e5dac78c979e6ee01388))
+* **api:** manual updates ([#24](https://github.com/identety/identety-python-sdk/issues/24)) ([e62ca67](https://github.com/identety/identety-python-sdk/commit/e62ca67078646d367c63e1c54942571cbe8333a1))
+* **api:** manual updates ([#25](https://github.com/identety/identety-python-sdk/issues/25)) ([a3a6e46](https://github.com/identety/identety-python-sdk/commit/a3a6e46411412638a754ba42d828f0c70256c8b6))
+* **api:** manual updates ([#26](https://github.com/identety/identety-python-sdk/issues/26)) ([fe253f1](https://github.com/identety/identety-python-sdk/commit/fe253f1b471b0fe1bd96ee3cd6e5b47ba0ab5ab1))
+* **api:** manual updates ([#27](https://github.com/identety/identety-python-sdk/issues/27)) ([c57c613](https://github.com/identety/identety-python-sdk/commit/c57c6139103d1a7051d543010f4a80110a47c8d7))
+
+
+### Chores
+
+* add missing isclass check ([#33](https://github.com/identety/identety-python-sdk/issues/33)) ([f09570a](https://github.com/identety/identety-python-sdk/commit/f09570a39e40d0103e6db08433a82d3e49ace9b3))
+* format all `api.md` files ([adebf47](https://github.com/identety/identety-python-sdk/commit/adebf47adab6ced89ca36a60d5e0ae5a7e3b2db7))
+* **internal:** bump httpx dependency ([#34](https://github.com/identety/identety-python-sdk/issues/34)) ([c03852c](https://github.com/identety/identety-python-sdk/commit/c03852c5c3106b8e697a6b2fd053f6140f0dcf58))
+* **internal:** codegen related update ([326021c](https://github.com/identety/identety-python-sdk/commit/326021cf894e9237cd8ba9a5f7987c93711f44b5))
+* **internal:** codegen related update ([457559e](https://github.com/identety/identety-python-sdk/commit/457559efc8aedad25aa78300648969d6fcd993a4))
+* **internal:** codegen related update ([cf59d7b](https://github.com/identety/identety-python-sdk/commit/cf59d7b67dd9bfa47bbf4e4bb06e3c01f280d747))
+* **internal:** codegen related update ([446cde2](https://github.com/identety/identety-python-sdk/commit/446cde29785874a8ac563d36e81d92da0d850bc5))
+* **internal:** codegen related update ([d210715](https://github.com/identety/identety-python-sdk/commit/d2107150bccd0865e695bb49a767ff965b1f6ddf))
+* **internal:** codegen related update ([e53533b](https://github.com/identety/identety-python-sdk/commit/e53533be6b8e2669f82221431f2273a5699f6122))
+* **internal:** codegen related update ([f2052bb](https://github.com/identety/identety-python-sdk/commit/f2052bbcde4d31c710192c2c8818813f5423d719))
+* **internal:** codegen related update ([6913c96](https://github.com/identety/identety-python-sdk/commit/6913c96156d94f44c38fb7b55e206e393d638214))
+* **internal:** codegen related update ([81b87cc](https://github.com/identety/identety-python-sdk/commit/81b87cce281fece24238ab9fe12cfb2b998f3525))
+* **internal:** codegen related update ([737eb3c](https://github.com/identety/identety-python-sdk/commit/737eb3cfa31506f5154f5f17913c72f978c8f687))
+* **internal:** codegen related update ([eee1c0e](https://github.com/identety/identety-python-sdk/commit/eee1c0e7fef955f29905e992ee6f73e8c6047ccc))
+* **internal:** codegen related update ([#28](https://github.com/identety/identety-python-sdk/issues/28)) ([c22c1af](https://github.com/identety/identety-python-sdk/commit/c22c1af86c0836eb9aa3174b2a3484fbb85c59d3))
+* **internal:** codegen related update ([#29](https://github.com/identety/identety-python-sdk/issues/29)) ([80434bb](https://github.com/identety/identety-python-sdk/commit/80434bbde43b909b7b0d108cd68576a62da11b69))
+* **internal:** codegen related update ([#32](https://github.com/identety/identety-python-sdk/issues/32)) ([1cd8291](https://github.com/identety/identety-python-sdk/commit/1cd829134b0852a8d76f118a5e548fd6fdecdd5a))
+* **internal:** codegen related update ([#35](https://github.com/identety/identety-python-sdk/issues/35)) ([a66801f](https://github.com/identety/identety-python-sdk/commit/a66801fa9216a1f954eeba84b88a2f42e4d4a9fd))
+* **internal:** fix some typos ([#31](https://github.com/identety/identety-python-sdk/issues/31)) ([2b2eb1a](https://github.com/identety/identety-python-sdk/commit/2b2eb1ac5bde2970487ae3db3f789630cc9df961))
+
+
+### Documentation
+
+* **readme:** example snippet for client context manager ([#30](https://github.com/identety/identety-python-sdk/issues/30)) ([294195e](https://github.com/identety/identety-python-sdk/commit/294195eb4433dcf23a38a5f0c019e310456dabef))
+
 ## 2.0.0 (2024-12-16)
 
 Full Changelog: [v1.1.0...v2.0.0](https://github.com/identety/identety-python-sdk/compare/v1.1.0...v2.0.0)
